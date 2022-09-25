@@ -1,0 +1,56 @@
+name: Firmware build (NTAG215)
+
+on:
+  push:
+    branches: '*'
+  pull_request:
+    branches: [ master ]
+
+permissions:
+  contents: read
+
+jobs:
+
+  # Builds with DFU_UPDATE_BUILD=1        
+  build_dfu:
+    runs-on: ubuntu-20.04
+    strategy:
+      # devices to build for
+      matrix:
+        board: [PUCKJS, PIXLJS, MDBT42Q, BANGLEJS, BANGLEJS2, PUCKJS_MINIMAL, PUCKJS_LITE]
+      # try and build for all devices even if one fails
+      fail-fast: false 
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0    
+    - name: make ${{ matrix.board }}
+      env:
+        TRAVIS: 1
+        RELEASE: 1
+        DFU_UPDATE_BUILD: 1
+        USE_NTAG215: 1
+        BOARD: ${{ matrix.board }} 
+        UPLOADTOKEN: ${{ secrets.UPLOADTOKEN }}  
+      run: |
+        source ./scripts/provision.sh  ${{ matrix.board }}
+        make
+        ./scripts/ci_upload.sh       
+    - name: Upload ${{ matrix.board }} build artifact
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: ${{ matrix.board }}
+        path: |
+          *.bin
+          *.hex
+          *.tgz
+          *.zip
+       
+# Disable doc building for now 
+#  docs:
+#    runs-on: ubuntu-20.04      
+#    steps:
+#    - name: makedocs
+#      run: make docs
+
+
