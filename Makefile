@@ -616,6 +616,18 @@ ifeq ($(USE_BLUETOOTH),1)
   SOURCES += libs/bluetooth/bluetooth_utils.c
 endif
 
+ifeq ($(USE_AMIITOOL),1)
+  USE_CRYPTO = 1
+  USE_SHA256 = 1
+  USE_AES = 1
+  DEFINES += -DUSE_AMIITOOL
+  INCLUDE += -I$(ROOT)/libs/amiitool/include
+  WRAPPERSOURCES += libs/amiitool/drbg.c \
+  libs/amiitool/keygen.c \
+  libs/amiitool/amiibo.c \
+  libs/amiitool/jswrap_amiitool.c
+endif
+
 ifeq ($(USE_CRYPTO),1)
   cryptofound:=$(shell if test -f make/crypto/$(FAMILY).make; then echo yes;fi)
   ifeq ($(cryptofound),yes)
