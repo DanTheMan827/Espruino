@@ -34,8 +34,7 @@ info = {
    'optimizeflags' : '-Os',
    'libraries' : [
      'BLUETOOTH',
-     'NFC',
-     'NEOPIXEL'
+     'NFC'
    ],
    'makefile' : [
      'DEFINES+=-DESPR_OFFICIAL_BOARD', # Don't display the donations nag screen
@@ -73,10 +72,10 @@ chip = {
   'adc' : 1,
   'dac' : 0,
   'saved_code' : {
-    'address' : ((118 - 24) * 4096), # Bootloader takes pages 120-127, FS takes 118-119
+    'address' : ((118 - 19) * 4096), # Bootloader takes pages 120-127, FS takes 118-119
     'page_size' : 4096,
-    'pages' : 24, # 96kB
-    'flash_available' : 512 - ((31 + 8 + 2 + 24)*4) # Softdevice uses 31 pages of flash, bootloader 8, FS 2, code 24. Each page is 4 kb.
+    'pages' : 19, # 96kB
+    'flash_available' : 512 - ((31 + 8 + 2 + 19)*4) # Softdevice uses 31 pages of flash, bootloader 8, FS 2, code 19. Each page is 4 kb.
   },
 };
 
